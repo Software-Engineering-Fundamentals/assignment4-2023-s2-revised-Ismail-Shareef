@@ -43,8 +43,8 @@ public class LibraryCard {
     public LibraryCard(Student student, Date IssueDate, Date ExpiryDate, int ID) {
         this.student = student;
         this.IssueDate = IssueDate;
-	   this.ExpiryDate = ExpiryDate;
-	   this.ID = ID;
+	    this.ExpiryDate = ExpiryDate;
+	    this.ID = ID;
     }
 
 
@@ -94,12 +94,52 @@ public class LibraryCard {
      * @return true if the book is successfully borrowed, false otherwise
      */
 
-    public boolean issueBook(Book book){
-    	return false;
-   
+    public boolean issueBook(Book book) throws IllegalBookIssueException{
+
+        try {
+        // Store the list of books borrowed into the variable borrowed
+        List<Book> borrowed = getBooks();
+
+        // check if the number of books borrowed is greater than 4
+        if (borrowed.size() > 4) {
+            return false;
+        }
+
+        if (borrowed.contains(book)) {
+            throw new IllegalBookIssueException("same book is already issued on the library card");
+        }
+
+        Date currDate = new Date();
+        if (ExpiryDate.before(currDate)) {
+            return false;
+        }
+
+        if (book.getStatus() == false) {
+            return false;
+        }
+
+        if (fine > 0) {
+            return false;
+        }
+
+        borrowed.add(book);
+        book.setStatus(false);
+
+        if (book.getDemand() == 0) {
+            book.setDays(15);
+        }
+        else if (book.getDemand() == 1) {
+            book.setDays(3);
+        }
+
+        return true;
+
+        } catch (IllegalBookIssueException e) {
+            return false;
     }
 
 
 
 
+}
 }

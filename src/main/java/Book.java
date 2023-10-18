@@ -49,7 +49,7 @@ public class Book {
     public Book(int ID, String title, int demand) {
         this.ID = ID;
         this.title = title;
-	   this.demand = demand;
+	    this.demand = demand;
     }
 
 
@@ -94,7 +94,7 @@ public class Book {
         return status;
     }
 
-    public void setDemand(boolean status) {
+    public void setStatus(boolean status) {
         this.status = status;
     }
 
