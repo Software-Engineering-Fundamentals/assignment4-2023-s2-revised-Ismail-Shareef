@@ -2,6 +2,7 @@
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.time.LocalDate;
 
 /**
  * Library Card associated with the Student 
@@ -15,12 +16,12 @@ public class LibraryCard {
     /**
      * Issue Date of the Card
      */
-    private Date IssueDate;
+    private LocalDate IssueDate;
 
     /**
      * Expiry Date of the Card
      */
-    private Date ExpiryDate;
+    private LocalDate ExpiryDate;
 
     /**
      * Number of books borrowed
@@ -40,7 +41,7 @@ public class LibraryCard {
 
 
 
-    public LibraryCard(Student student, Date IssueDate, Date ExpiryDate, int ID) {
+    public LibraryCard(Student student, LocalDate IssueDate, LocalDate ExpiryDate, int ID) {
         this.student = student;
         this.IssueDate = IssueDate;
 	    this.ExpiryDate = ExpiryDate;
@@ -65,19 +66,19 @@ public class LibraryCard {
     }
 
 
-    public Date getIssueDate() {
+    public LocalDate getIssueDate() {
         return IssueDate;
     }
 
-    public void setIssueDate(Date IssueDate) {
+    public void setIssueDate(LocalDate IssueDate) {
         this.IssueDate = IssueDate;
     }
 
-    public Date getExpiryDate() {
+    public LocalDate getExpiryDate() {
         return ExpiryDate;
     }
 
-    public void setExpiryDate(Date ExpiryDate) {
+    public void setExpiryDate(LocalDate ExpiryDate) {
         this.ExpiryDate = ExpiryDate;
     }
 
@@ -97,8 +98,6 @@ public class LibraryCard {
     public boolean issueBook(Book book) throws IllegalBookIssueException{
 
         try {
-        // Store the list of books borrowed into the variable borrowed
-        List<Book> borrowed = getBooks();
 
         // check if the number of books borrowed is greater than 4
         if (borrowed.size() > 4) {
@@ -109,8 +108,8 @@ public class LibraryCard {
             throw new IllegalBookIssueException("same book is already issued on the library card");
         }
 
-        Date currDate = new Date();
-        if (ExpiryDate.before(currDate)) {
+        LocalDate currentDate = LocalDate.now();
+        if (ExpiryDate.isBefore(currentDate)) {
             return false;
         }
 
@@ -122,7 +121,6 @@ public class LibraryCard {
             return false;
         }
 
-        borrowed.add(book);
         book.setStatus(false);
 
         if (book.getDemand() == 0) {
@@ -130,6 +128,12 @@ public class LibraryCard {
         }
         else if (book.getDemand() == 1) {
             book.setDays(3);
+        }
+
+        borrowed.add(book);
+
+        if ((!(borrowed.contains(book))) && book.getStatus() == true) {
+            return false;
         }
 
         return true;
