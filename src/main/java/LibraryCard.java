@@ -104,23 +104,28 @@ public class LibraryCard {
             return false;
         }
 
+        // check if book has already been issued to library card
         if (borrowed.contains(book)) {
             throw new IllegalBookIssueException("same book is already issued on the library card");
         }
 
+        // check if library card is valid (not expired)
         LocalDate currentDate = LocalDate.now();
         if (ExpiryDate.isBefore(currentDate)) {
             return false;
         }
 
+        // check if book is available to borrow
         if (book.getStatus() == false) {
             return false;
         }
 
+        // check if library card has fine associated with it 
         if (fine > 0) {
             return false;
         }
 
+        // issue book to library card if above conditions have not already returned false
         book.setStatus(false);
 
         if (book.getDemand() == 0) {
@@ -132,6 +137,7 @@ public class LibraryCard {
 
         borrowed.add(book);
 
+        // validate if the book has been issued to the card correctly before returning true
         if ((!(borrowed.contains(book))) && book.getStatus() == true) {
             return false;
         }
